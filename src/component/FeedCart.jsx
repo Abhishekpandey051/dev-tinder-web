@@ -11,7 +11,9 @@ const dispatch = useDispatch()
 const handleSendRequest = async(status, userId) => {
   try{
     const res = await axios.post(BASE_URL + '/request/send/' + status + '/' + userId, {}, {withCredentials:true} )
+    if(res){
     dispatch(removeUserFromFeed(userId))
+    }
   }
   catch(err){
     console.log(err)

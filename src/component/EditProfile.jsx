@@ -89,7 +89,7 @@ const EditProfile = ({ user }) => {
           <select defaultValue="Pick a color" className="select" value={editProfile.gender} onChange={(e)=>handleChange(e)} name='gender'>
             <option disabled={true}>Select gender</option>
             {gender.map((g) => 
-            <option>{g}</option>
+            <option key={g}>{g}</option>
             )}
           </select>
           <p className='text-red-500 my-4'>{error}</p>
