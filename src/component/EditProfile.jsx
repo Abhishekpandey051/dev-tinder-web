@@ -5,7 +5,8 @@ import { BASE_URL } from '../utils/constant'
 import { useDispatch } from 'react-redux'
 import { addUser } from '../utils/userSlice'
 
-const EditProfile = ({user}) => {
+const EditProfile = ({ user }) => {
+  const gender = ['male', 'female', 'other'];
   const [error, setError] = useState('')
   const [editProfile, setEditProfile] = useState({
     firstName: user.firstName,
@@ -17,26 +18,26 @@ const EditProfile = ({user}) => {
   })
   const dispatch = useDispatch()
   const handleChange = (e) => {
-    const {name, value} = e.target
+    const { name, value } = e.target
     setEditProfile({
       ...editProfile,
       [name]: value
     })
   }
-  const handleSaveData = async() => {
-    try{
-      const res = await axios.patch(BASE_URL + '/profile/edit', editProfile, {withCredentials:true});
-      if(res){
+  const handleSaveData = async () => {
+    try {
+      const res = await axios.patch(BASE_URL + '/profile/edit', editProfile, { withCredentials: true });
+      if (res) {
         dispatch(addUser(res.data))
       }
     }
-    catch(err){
+    catch (err) {
       setError(err?.response?.data)
     }
   }
   return (
     <div className='flex justify-center my-4 gap-5'>
-        <div className="card bg-base-300 w-96 shadow-sm flex justify-self-center my-4">
+      <div className="card bg-base-300 w-96 shadow-sm flex justify-self-center">
         <div className="card-body">
           <h2 className="card-title justify-center text-2xl">Edit Profile</h2>
           <fieldset className="fieldset">
@@ -46,7 +47,7 @@ const EditProfile = ({user}) => {
               className="input"
               name='firstName'
               value={editProfile.firstName}
-              onChange={(e)=>handleChange(e)}
+              onChange={(e) => handleChange(e)}
             />
           </fieldset>
           <fieldset className="fieldset">
@@ -56,18 +57,13 @@ const EditProfile = ({user}) => {
               className="input"
               name='lastName'
               value={editProfile.lastName}
-              onChange={(e)=>handleChange(e)}
+              onChange={(e) => handleChange(e)}
             />
           </fieldset>
           <fieldset className="fieldset">
             <legend className="fieldset-legend">About</legend>
-            <input
-              type="text"
-              className="input"
-              name='about'
-              value={editProfile.about}
-              onChange={(e)=>handleChange(e)}
-            />
+            <textarea className="textarea h-24" placeholder="About" value={editProfile.about} name='about' onChange={(e) => handleChange(e)}></textarea>
+            <div className="label">Optional</div>
           </fieldset>
           <fieldset className="fieldset">
             <legend className="fieldset-legend">Photo URL</legend>
@@ -76,7 +72,7 @@ const EditProfile = ({user}) => {
               className="input"
               value={editProfile.photoUrl}
               name='photoUrl'
-              onChange={(e)=>handleChange(e)}
+              onChange={(e) => handleChange(e)}
             />
           </fieldset>
           <fieldset className="fieldset">
@@ -86,29 +82,26 @@ const EditProfile = ({user}) => {
               className="input"
               name='age'
               value={editProfile.age}
-              onChange={(e)=>handleChange(e)}
+              onChange={(e) => handleChange(e)}
             />
           </fieldset>
-          <fieldset className="fieldset">
             <legend className="fieldset-legend">Gender</legend>
-            <input
-              type="text"
-              className="input"
-              name='gender'
-              value={editProfile.gender}
-              onChange={(e)=>handleChange(e)}
-            />
-          </fieldset>
+          <select defaultValue="Pick a color" className="select" value={editProfile.gender} onChange={(e)=>handleChange(e)} name='gender'>
+            <option disabled={true}>Select gender</option>
+            {gender.map((g) => 
+            <option>{g}</option>
+            )}
+          </select>
           <p className='text-red-500 my-4'>{error}</p>
           <div className="card-actions justify-center">
             <button className="btn btn-primary" onClick={handleSaveData}>
-              Login
+              Save Data
             </button>
           </div>
         </div>
       </div>
       <div className='w-96'>
-      <FeedCart user={editProfile}/>
+        <FeedCart user={editProfile} />
       </div>
     </div>
   )

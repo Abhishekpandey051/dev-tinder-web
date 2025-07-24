@@ -8,29 +8,25 @@ import { BASE_URL } from "../utils/constant";
 const Login = () => {
   const [error, setError] = useState('');
   const [loginCredentil, setLoginCrendial] = useState({
-    emailId: "rishabh@gamil.com",
-    password: "Rishabh@123",
+    emailId: "",
+    password: "",
   });
-
+console.log("Crendetial ", loginCredentil)
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
   const handleInputField = (e) => {
+      const {name, value} = e.target
     setLoginCrendial({
       ...loginCredentil,
-      emailId: e.target.value,
-      password: e.target.value,
+      [name]:value
     });
   };
 
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-         BASE_URL + "/login",
-        {
-          emailId: loginCredentil.emailId,
-          password: loginCredentil.password,
-        },
+         BASE_URL + "/login", loginCredentil,
         {
           withCredentials: true,
         },
@@ -55,6 +51,7 @@ const Login = () => {
             <input
               type="text"
               className="input"
+              name="emailId"
               value={loginCredentil.emailId}
               onChange={(e) => handleInputField(e)}
             />
@@ -64,6 +61,7 @@ const Login = () => {
             <input
               type="password"
               className="input"
+              name="password"
               value={loginCredentil.password}
               onChange={(e) => handleInputField(e)}
             />
