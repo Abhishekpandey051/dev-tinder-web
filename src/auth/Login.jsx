@@ -7,11 +7,13 @@ import { BASE_URL } from "../utils/constant";
 
 const Login = () => {
   const [error, setError] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
   const [loginCredentil, setLoginCrendial] = useState({
+    firstName:"",
+    lastName:"",
     emailId: "",
     password: "",
   });
-console.log("Crendetial ", loginCredentil)
   const dispatch = useDispatch();
   const navigate = useNavigate()
 
@@ -34,6 +36,7 @@ console.log("Crendetial ", loginCredentil)
       if(res){
         dispatch(addUser(res.data));
         navigate('/')
+        setIsLogin({})
       }
     } catch (err) {
       setError(err?.response?.data);
@@ -41,11 +44,51 @@ console.log("Crendetial ", loginCredentil)
     }
   };
 
+  const handleSignUp = async() => {
+    try{
+      const res = await axios.post(BASE_URL + "/signup", loginCredentil, {withCredentials:true})
+      if(res){
+      dispatch(addUser(res?.data?.data))
+      setIsLogin({})
+    }
+    }
+    catch(err){
+      setError(err?.response?.data)
+      console.log(err)
+    }
+  }
+
   return (
     <>
       <div className="card bg-base-300 w-96 shadow-sm flex justify-self-center my-4">
         <div className="card-body">
-          <h2 className="card-title justify-center text-2xl">Login</h2>
+          <h2 className="card-title justify-center text-2xl">{isLogin ? 'Login' : 'Sign up'}</h2>
+         { !isLogin && 
+         <div>
+         <fieldset className="fieldset">
+            <legend className="fieldset-legend">First name</legend>
+            <input
+              type="text"
+              className="input"
+              name="firstName"
+              value={loginCredentil.firstName}
+              onChange={(e) => handleInputField(e)}
+            />
+          </fieldset>
+
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Last name</legend>
+            <input
+              type="text"
+              className="input"
+              name="lastName"
+              value={loginCredentil.lastName}
+              onChange={(e) => handleInputField(e)}
+            />
+          </fieldset>
+          </div>
+          }
+
           <fieldset className="fieldset">
             <legend className="fieldset-legend">EmailId</legend>
             <input
@@ -68,10 +111,19 @@ console.log("Crendetial ", loginCredentil)
           </fieldset>
           <p className="my-4 text-red-500">{error}</p>
           <div className="card-actions justify-center">
-            <button className="btn btn-primary" onClick={handleLogin}>
-              Login
+            <button className="btn btn-primary" onClick={isLogin ? handleLogin : handleSignUp}>
+              {isLogin ? 'Login' : 'SignUp'}
             </button>
           </div>
+          <p 
+          className="m-auto cursor-pointer py-2"
+          onClick={()=>setIsLogin(!isLogin)}
+          >
+            {
+              isLogin ? "New User? Signup Here"
+              : "Existing User? Login Here"
+            }
+          </p>
         </div>
       </div>
     </>
